@@ -89,7 +89,7 @@ Your file should be like this: [user_socket.ex](https://github.com/ManuelBilbao/
 
 ## 3.1 Update the main content
 
-Open the `lib/chat_web/templates/page/index.html.heex` and replace all the content with:
+Open file `lib/chat_web/templates/page/index.html.heex` and replace all the content with:
 
 ```html
 <!-- The list of messages will appear here: -->
@@ -110,7 +110,7 @@ Your file should be like this: [index.html.heex](https://github.com/ManuelBilbao
 
 ## 3.2 Update the layout
 
-Open the `lib/chat_web/templates/layout/root.html.heex`. Replace all the content inside the `<header></header>` tags with:
+Open file `lib/chat_web/templates/layout/root.html.heex`. Replace all the content inside the `<header></header>` tags with:
 
 ```html
 <section class="container">
@@ -127,3 +127,55 @@ Your file should be like this: [root.html.heex](https://github.com/ManuelBilbao/
 ### Safe check
 
 At this point, if you run the server (remember, `mix phx.server`), you should see the new page with the "Chat Example" title and two input fields.
+
+# 4. Update the "Client" code in JS.
+
+Open file `assets/js/app.js`. Replace all the code with:
+
+```js
+// We import the CSS which is extracted to its own file by esbuild.
+// Remove this line if you add a your own CSS build pipeline (e.g postcss).
+import "../css/app.css"
+
+import socket from "./user_socket.js"
+
+let channel = socket.channel('room:lobby', {}); // connect to chat "room"
+
+channel.on('shout', function (payload) { // listen to the 'shout' event
+  let li = document.createElement("li"); // create new list item DOM element
+  let name = payload.name || 'guest';    // get name from payload or set default
+  li.innerHTML = '<b>' + name + '</b>: ' + payload.message; // set li contents
+  ul.appendChild(li);                    // append to list
+});
+
+channel.join(); // join the channel.
+
+
+let ul = document.getElementById('msg-list');        // list of messages.
+let name = document.getElementById('name');          // name of message sender
+let msg = document.getElementById('msg');            // message input field
+
+// "listen" for the [Enter] keypress event to send a message:
+msg.addEventListener('keypress', function (event) {
+  if (event.keyCode == 13 && msg.value.length > 0) { // don't sent empty msg.
+    channel.push('shout', { // send the message to the server on "shout" channel
+      name: name.value || "guest",     // get value of "name" of person sending the message. Set guest as default
+      message: msg.value    // get message text (value) from msg input field.
+    });
+    msg.value = '';         // reset the message input field for next message.
+  }
+});
+```
+
+Your file should be like this: [app.js](https://github.com/ManuelBilbao/elixir-chat/blob/c4390c46edc1a890d45a8d6f5142b885e730f84b/assets/js/app.js)
+
+To avoid console errors in the browser, search this lines in `assets/js/user_socket.js` and comment it:
+
+```js
+let channel = socket.channel("topic:subtopic", {})
+channel.join()
+  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("error", resp => { console.log("Unable to join", resp) })
+```
+
+Your file should be like this: [user_socket.js](https://github.com/ManuelBilbao/elixir-chat/blob/c4390c46edc1a890d45a8d6f5142b885e730f84b/assets/js/user_socket.js)
