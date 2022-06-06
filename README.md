@@ -191,3 +191,13 @@ Your file should be like this: [user_socket.js](https://github.com/ManuelBilbao/
 # Checkpoint!
 
 At this point, you have a totally functional online chat. Go ahead and check it! (`mix phx.server`). Now we are going to add it persistance so the messages don't get missed on reloads.
+
+# 5. Generate database schema
+
+Run the following command:
+
+```bash
+mix phx.gen.schema Message messages name:string message:string
+```
+
+With this, you have generated a file describing the database table.
