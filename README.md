@@ -85,6 +85,14 @@ channel "room:lobby", ChatWeb.RoomChannel
 
 Your file should be like this: [user_socket.ex](https://github.com/ManuelBilbao/elixir-chat/blob/5a9b51136da37a620a57f00400ab303e3ba1e1dd/lib/chat_web/channels/user_socket.ex)
 
+Add the socket handler in `lib/chat_web/endpoint.ex` with this line:
+
+```elixir
+socket "/socket", ChatWeb.UserSocket, websocket: true, longpoll: false
+```
+
+Your file should be like this: [endpoint.ex](https://github.com/ManuelBilbao/elixir-chat/blob/a70acc431a7df8250ace15ec955eac50940db9ca/lib/chat_web/endpoint.ex)
+
 # 3. Update the UI
 
 ## 3.1 Update the main content
