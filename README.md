@@ -201,3 +201,12 @@ mix phx.gen.schema Message messages name:string message:string
 ```
 
 With this, you have generated a file describing the database table.
+
+# 6. Run the Ecto migration
+
+Now, we have to apply those migrations to get it reflected in the database.
+
+```bash
+mix ecto.migrate
+```
+
