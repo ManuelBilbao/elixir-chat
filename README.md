@@ -60,3 +60,27 @@ mix phx.server
 ```
 
 The server should be started at `localhost:4000`.
+
+# 2. Create the (WebSocket) _Channel_
+
+Generate the (WebSocket) channel to be used in the chat app:
+
+```bash
+mix phx.gen.channel Room
+```
+
+> When prompted to confirm the creation, type _Y_.
+
+Open the file `/lib/chat_web/channels/user_socket.ex`. Change the line 11:
+
+```elixir
+channel "room:*", ChatWeb.RoomChannel
+```
+
+to:
+
+```elixir
+channel "room:lobby", ChatWeb.RoomChannel
+```
+
+Your file should be like this: [user_socket.ex](https://github.com/ManuelBilbao/elixir-chat/blob/5a9b51136da37a620a57f00400ab303e3ba1e1dd/lib/chat_web/channels/user_socket.ex)
