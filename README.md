@@ -187,3 +187,7 @@ channel.join()
 ```
 
 Your file should be like this: [user_socket.js](https://github.com/ManuelBilbao/elixir-chat/blob/c4390c46edc1a890d45a8d6f5142b885e730f84b/assets/js/user_socket.js)
+
+# Checkpoint!
+
+At this point, you have a totally functional online chat. Go ahead and check it! (`mix phx.server`). Now we are going to add it persistance so the messages don't get missed on reloads.
