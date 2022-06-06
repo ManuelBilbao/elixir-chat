@@ -210,3 +210,12 @@ Now, we have to apply those migrations to get it reflected in the database.
 mix ecto.migrate
 ```
 
+# 7. Insert messages into database
+
+Open the `lib/chat_web/channels/room_channel.ex` file and inside the `handle_in/3` function, insert this line:
+
+```elixir
+Chat.Message.changeset(%Chat.Message{}, payload) |> Chat.Repo.insert
+```
+
+Your file should be like this: [room_channel.ex](https://github.com/ManuelBilbao/elixir-chat/blob/19f5b51b1186e9d12e93c8935812a60adf6dadb6/lib/chat_web/channels/room_channel.ex)
