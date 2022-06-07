@@ -1,10 +1,22 @@
-⚠️ATTENTION!⚠️ This README is incomplete and in progress. Please, refer to the [latest version of this repo](https://github.com/ManuelBilbao/elixir-chat).
-
----
-
 A very simple (but persistent) online chat tutorial, made with Elixir and Phoenix.
 
-# 0. Requisites
+# Index
+
+- [Requisites](#requisites)
+- [Steps](#steps)
+  - [1. Create the app](#1-create-the-app)
+  - [2. Create the (WebSocket) _Channel_](#2-create-the-websocket-channel)
+  - [3. Update the UI](#3-update-the-ui)
+  - [4. Update the "Client" code in JS.](#4-update-the-client-code-in-js)
+  - [Checkpoint!](#checkpoint)
+  - [5. Generate database schema](#5-generate-database-schema)
+  - [6. Run the Ecto migration](#6-run-the-ecto-migration)
+  - [7. Insert messages into database](#7-insert-messages-into-database)
+  - [8. Load existing messages from database](#8-load-existing-messages-from-database)
+  - [9. Send existing messages to the client when they join](#9-send-existing-messages-to-the-client-when-they-join)
+- [Credits](#credits)
+
+# Requisites
 
 1. Elixir ([installation page](http://elixir-lang.org/install.html)). 
   - Tested on version `1.13.2`.
@@ -13,7 +25,9 @@ A very simple (but persistent) online chat tutorial, made with Elixir and Phoeni
   - Tested on version `1.6.9`.
   - Run `mix phx.new --version` to check your version.
 
-# 1. Create the app
+# Steps
+
+## 1. Create the app
 
 Run the following command to create the app:
 
@@ -61,7 +75,7 @@ mix phx.server
 
 The server should be started at `localhost:4000`.
 
-# 2. Create the (WebSocket) _Channel_
+## 2. Create the (WebSocket) _Channel_
 
 Generate the (WebSocket) channel to be used in the chat app:
 
@@ -93,9 +107,9 @@ socket "/socket", ChatWeb.UserSocket, websocket: true, longpoll: false
 
 Your file should be like this: [endpoint.ex](https://github.com/ManuelBilbao/elixir-chat/blob/a70acc431a7df8250ace15ec955eac50940db9ca/lib/chat_web/endpoint.ex)
 
-# 3. Update the UI
+## 3. Update the UI
 
-## 3.1 Update the main content
+### 3.1 Update the main content
 
 Open file `lib/chat_web/templates/page/index.html.heex` and replace all the content with:
 
@@ -116,7 +130,7 @@ Open file `lib/chat_web/templates/page/index.html.heex` and replace all the cont
 
 Your file should be like this: [index.html.heex](https://github.com/ManuelBilbao/elixir-chat/blob/f7e4ad9bfced2e7c73943188b2dee3bd8ff63e67/lib/chat_web/templates/page/index.html.heex)
 
-## 3.2 Update the layout
+### 3.2 Update the layout
 
 Open file `lib/chat_web/templates/layout/root.html.heex`. Replace all the content inside the `<header></header>` tags with:
 
@@ -136,7 +150,7 @@ Your file should be like this: [root.html.heex](https://github.com/ManuelBilbao/
 
 At this point, if you run the server (remember, `mix phx.server`), you should see the new page with the "Chat Example" title and two input fields.
 
-# 4. Update the "Client" code in JS.
+## 4. Update the "Client" code in JS.
 
 Open file `assets/js/app.js`. Replace all the code with:
 
@@ -188,11 +202,11 @@ channel.join()
 
 Your file should be like this: [user_socket.js](https://github.com/ManuelBilbao/elixir-chat/blob/c4390c46edc1a890d45a8d6f5142b885e730f84b/assets/js/user_socket.js)
 
-# Checkpoint!
+## Checkpoint!
 
 At this point, you have a totally functional online chat. Go ahead and check it! (`mix phx.server`). Now we are going to add it persistance so the messages don't get missed on reloads.
 
-# 5. Generate database schema
+## 5. Generate database schema
 
 Run the following command:
 
@@ -202,7 +216,7 @@ mix phx.gen.schema Message messages name:string message:string
 
 With this, you have generated a file describing the database table.
 
-# 6. Run the Ecto migration
+## 6. Run the Ecto migration
 
 Now, we have to apply those migrations to get it reflected in the database.
 
@@ -210,7 +224,7 @@ Now, we have to apply those migrations to get it reflected in the database.
 mix ecto.migrate
 ```
 
-# 7. Insert messages into database
+## 7. Insert messages into database
 
 Open the `lib/chat_web/channels/room_channel.ex` file and inside the `handle_in/3` function, insert this line:
 
@@ -220,7 +234,7 @@ Chat.Message.changeset(%Chat.Message{}, payload) |> Chat.Repo.insert
 
 Your file should be like this: [room_channel.ex](https://github.com/ManuelBilbao/elixir-chat/blob/19f5b51b1186e9d12e93c8935812a60adf6dadb6/lib/chat_web/channels/room_channel.ex)
 
-# 8. Load existing messages from database
+## 8. Load existing messages from database
 
 Open the file `lib/chat/messages.ex`. Add an import to `Ecto.Query` and the following function:
 
@@ -235,7 +249,7 @@ end
 
 Your file should be like this: [messages.ex](https://github.com/ManuelBilbao/elixir-chat/blob/main/lib/chat/message.ex)
 
-# 9. Send existing messages to the client when they join
+## 9. Send existing messages to the client when they join
 
 Open the `lib/chat_web/channels/room_channel.ex` file and create a new function:
 
@@ -258,3 +272,7 @@ send(self(), :after_join)
 ```
 
 Your file should be like this: [room_channel.ex](https://github.com/ManuelBilbao/elixir-chat/blob/e12e67ed86f0ed7122d47844d70af7a64ab3e0ea/lib/chat_web/channels/room_channel.ex)
+
+# Credits
+
+This guide is based on [dwyl/phoenix-chat-example](https://github.com/dwyl/phoenix-chat-example), and slightly modified to work with the Elixir and Phoenix versions previously mentioned. There it's more info about each command and code lines, as well as other things like tests and deployment.
