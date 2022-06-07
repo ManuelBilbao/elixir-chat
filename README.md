@@ -219,3 +219,18 @@ Chat.Message.changeset(%Chat.Message{}, payload) |> Chat.Repo.insert
 ```
 
 Your file should be like this: [room_channel.ex](https://github.com/ManuelBilbao/elixir-chat/blob/19f5b51b1186e9d12e93c8935812a60adf6dadb6/lib/chat_web/channels/room_channel.ex)
+
+# 8. Load existing messages from database
+
+Open the file `lib/chat/messages.ex`. Add an import to `Ecto.Query` and the following function:
+
+```elixir
+def get_messages(limit \\ 20) do
+  Chat.Message
+  |> limit(^limit)
+  |> order_by(desc: :inserted_at)
+  |> Chat.Repo.all()
+end
+```
+
+Your file should be like this: [messages.ex](https://github.com/ManuelBilbao/elixir-chat/blob/main/lib/chat/message.ex)
