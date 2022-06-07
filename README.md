@@ -234,3 +234,27 @@ end
 ```
 
 Your file should be like this: [messages.ex](https://github.com/ManuelBilbao/elixir-chat/blob/main/lib/chat/message.ex)
+
+# 9. Send existing messages to the client when they join
+
+Open the `lib/chat_web/channels/room_channel.ex` file and create a new function:
+
+```elixir
+def handle_info(:after_join, socket) do
+  Chat.Message.get_messages()
+  |> Enum.reverse() # revers to display the latest message at the bottom of the page
+  |> Enum.each(fn msg -> push(socket, "shout", %{
+      name: msg.name,
+      message: msg.message,
+    }) end)
+  {:noreply, socket} # :noreply
+end
+```
+
+Then update the `join` function adding this line inside the `if` statement:
+
+```elixir
+send(self(), :after_join)
+```
+
+Your file should be like this: [room_channel.ex](https://github.com/ManuelBilbao/elixir-chat/blob/e12e67ed86f0ed7122d47844d70af7a64ab3e0ea/lib/chat_web/channels/room_channel.ex)
